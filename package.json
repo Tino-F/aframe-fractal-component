@@ -26,7 +26,10 @@
     "aframe-vr",
     "vr",
     "webvr",
-    "fractal"
+    "fractal",
+    "audio",
+    "visualizer",
+    "3D"
   ],
   "author": "Tino Fileccia <tino@tessera.works>",
   "license": "MIT",
