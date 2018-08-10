@@ -1,5 +1,7 @@
 ## aframe-fractal-component
 
+![Lorenz Attractor](https://rawgit.com/Tino-F/aframe-fractal-component/master/examples/imgs/lorenz_attractor.png)
+
 [![Version](http://img.shields.io/npm/v/aframe-fractal-component.svg?style=flat-square)](https://npmjs.org/package/aframe-fractal-component)
 [![License](http://img.shields.io/npm/l/aframe-fractal-component.svg?style=flat-square)](https://npmjs.org/package/aframe-fractal-component)
 
