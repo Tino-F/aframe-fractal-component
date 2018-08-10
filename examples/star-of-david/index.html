@@ -2,7 +2,7 @@
 <html lang="en" dir="ltr">
   <head>
     <meta charset="utf-8">
-    <title>Fractal Test</title>
+    <title>Star of David</title>
     <link rel="stylesheet" href="../css/main.css">
     <script src="https://aframe.io/releases/0.8.0/aframe.min.js"></script>
     <script src='../../dist/aframe-fractal-component.min.js'></script>
@@ -10,7 +10,7 @@
   <body>
     <a-scene>
 
-      <a-sound cross-origin='true' src='src: url(../music/flops.mp3)' position='0 0 -10' id='audio' autoplay='true'></a-sound>
+      <a-sound position='0 0 -10' id='audio' autoplay='true'></a-sound>
 
       <a-entity position='0 0 -250'>
 
@@ -33,8 +33,10 @@
 
     </a-scene>
 
-    <a href='https://soundcloud.com/electricmantis/flips-and-flops-drips-and-1' target='_blank' class='songtitle'>
-      <h1>Electric Mantis - Flips And Flops, Drips And Drops</h1>
+    <a href='https://soundcloud.com/electricmantis/flips-and-flops-drips-and-1' target='_blank' class='songtitleContainer'>
+      <h1 class='songtitle'>Drag a song into the scene to play it!</h1>
     </a>
+
+    <script src='/examples/js/dragndrop.js'></script>
   </body>
 </html>

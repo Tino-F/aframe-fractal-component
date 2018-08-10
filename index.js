@@ -152,7 +152,7 @@ AFRAME.registerComponent('fractal', {
         for ( var i = 0; i < meshes; i++ ) {
           // The shape is made up of vertexes generated
           this.Fractal.clouds[i] = new THREE.Geometry();
-          this.Fractal.materials[i] = new THREE.PointsMaterial({color: 0xffffff, size: this.data.pointSize});
+          this.Fractal.materials[i] = new THREE.PointsMaterial({color: this.data.colors[0], size: this.data.pointSize});
         }
 
         for(var i=0; i < this.data.points; i++) {
@@ -186,12 +186,18 @@ AFRAME.registerComponent('fractal', {
 
         this.el.setObject3D('group', this.Fractal.group);
 
-        this.data.audioSource.components.sound.pool.children.forEach(function ( sound ) {
-          //Create audioAnalyzer
+        this.data.audioSource.addEventListener('sound-loaded', function ( e ) {
 
-          this.Fractal.audioAnalysers.push( new THREE.AudioAnalyser( sound, this.data.fftSize) );
+          this.Fractal.audioAnalysers = [];
 
-        }.bind(this));
+          this.data.audioSource.components.sound.pool.children.forEach(function ( sound ) {
+            //Create audioAnalyzer
+
+            this.Fractal.audioAnalysers.push( new THREE.AudioAnalyser( sound, this.data.fftSize) );
+
+          }.bind(self));
+
+        }.bind(self))
 
       }
 
@@ -203,14 +209,17 @@ AFRAME.registerComponent('fractal', {
 
     this.Fractal.listen = function () {
 
-      var spectrum = this.Fractal.audioAnalysers[0].getFrequencyData();
-      var i = 0;
+      if ( this.Fractal.audioAnalysers.length ) {
+        var spectrum = this.Fractal.audioAnalysers[0].getFrequencyData();
+        var i = 0;
 
-      this.Fractal.materials.forEach(( point ) => {
-        var color = this.Fractal.getColor( spectrum[ i ] / 256 );
-        point.color.setHex( color );
-        i++;
-      });
+        this.Fractal.materials.forEach(( point ) => {
+          var color = this.Fractal.getColor( spectrum[ i ] / 256 );
+          point.color.setHex( color );
+          i++;
+        });
+      }
+
     }.bind(self);
 
     this.Fractal.updateColors();
