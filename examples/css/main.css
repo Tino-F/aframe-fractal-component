@@ -1,0 +1,11 @@
+.songtitle {
+  position: fixed;
+  top: 0;
+  text-decoration: none;
+  font-family: sans-serif;
+}
+
+.songtitle > h1 {
+  padding-left: 30px;
+  color: white;
+}
