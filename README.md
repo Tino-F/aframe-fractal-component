@@ -5,8 +5,6 @@
 
 An A-Frame component for graphing audio responsive points.
 
-For [A-Frame](https://aframe.io).
-
 ### Installation
 
 #### Browser
@@ -65,7 +63,7 @@ require('aframe-fractal-component');
 <a-entity fractal='audioSource: #audio; points: 200; x: Math.sin(t) * (t^2); z: Math.sin(t^2);' position='0 140 0' rotation='0 0 180'></a-entity>
 ```
 
-# Instructions
+## Instructions
 
 To plot a set of points, you have define f(t) for x, y, and z. In the example at the top of this page I defined f(t) for z as Math.sin(t^2). For each 200 points, it will increment t by 1 and return the value of f(t) in the case of z.
 
