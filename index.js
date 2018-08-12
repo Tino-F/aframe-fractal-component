@@ -4,6 +4,18 @@ if (typeof AFRAME === 'undefined') {
   throw new Error('Component attempted to register before AFRAME was available.');
 }
 
+//requre effectcomposer
+//https://www.npmjs.com/package/three-effectcomposer
+require('./src/EffectComposer');
+require('./src/RenderPass');
+require('./src/CopyShader');
+require('./src/FXAAShader');
+require('./src/ShaderPass');
+require('./src/UnrealBloomPass');
+require('./src/LuminosityHighPassShader');
+require('./src/DotScreenPass');
+require('./src/DotScreenShader');
+
 /**
  * Aframe Fractal component for A-Frame.
  */
@@ -12,11 +24,15 @@ AFRAME.registerComponent('fractal', {
     x: {type: 'string', default: 't' },
     y: {type: 'string', default: 't' },
     z: {type: 'string', default: 't' },
-    colors: {type: 'array', default: [ '#f4ee42', '#41f468', '#41dff4' ]},
-    points: {type: 'int', default: 100},
     audioSource: {type:'selector'},
-    fftSize: {type: 'int', default: 256},
+    bloom: {type: 'boolean', default: false},
+    bloomStrength: {type: 'float', default: 2},
+    bloomThreshold: {type: 'float', default: 0.3},
+    bloomRadius: {type: 'float', default: 1.3},
+    colors: {type: 'array', default: [ '#f4ee42', '#41f468', '#41dff4' ]},
     detail: {type: 'int', default: 100},
+    fftSize: {type: 'int', default: 256},
+    points: {type: 'int', default: 100},
     pointSize: {type: 'int', default: 1},
     scale: {type: 'float', default: 1}
   },
@@ -124,11 +140,11 @@ AFRAME.registerComponent('fractal', {
 
           var result = this.Fractal.ft( i );
           var point = new THREE.Vector3();
-
           this.Fractal.PointArray.push( result );
-    			point.x = result.x * this.data.scale;
-    			point.y = result.y * this.data.scale;
-    			point.z = result.z * this.data.scale;
+
+          point.x = result.x * this.data.scale;
+          point.y = result.y * this.data.scale;
+          point.z = result.z * this.data.scale;
 
           this.Fractal.geometry.vertices.push( point );
 
@@ -138,6 +154,56 @@ AFRAME.registerComponent('fractal', {
 
         this.el.setObject3D('mesh', this.Fractal.mesh);
 
+        if ( this.data.bloom ) {
+
+          this.el.sceneEl.addEventListener('camera-set-active', e => {
+
+            //vvv Check if removable vvv
+            this.el.sceneEl.renderer.autoClear = false;
+            //end
+            this.el.sceneEl.renderer.gammaInput = true;
+  				  this.el.sceneEl.renderer.gammaOutput = true;
+            this.el.sceneEl.renderer.toneMapping = THREE.LinearToneMapping;
+            this.el.sceneEl.renderer.toneMappingExposure = Math.pow( 0.9, 4.0 );
+
+            this.Fractal.composer = new THREE.EffectComposer( this.el.sceneEl.renderer );
+
+            this.Fractal.renderPass = new THREE.RenderPass( this.el.sceneEl.object3D, this.el.sceneEl.camera );
+            this.Fractal.effectFXAA = new THREE.ShaderPass(THREE.FXAAShader);
+		        this.Fractal.effectFXAA.uniforms['resolution'].value.set(1 / window.innerWidth, 1 / window.innerHeight );
+            this.Fractal.bloomPass = new THREE.UnrealBloomPass( new THREE.Vector2(window.innerWidth, window.innerHeight), this.data.bloomStrength, this.data.bloomRadius, this.data.bloomThreshold );
+            this.Fractal.bloomPass.renderToScreen = true;
+
+            this.Fractal.composer.setSize(window.innerWidth, window.innerHeight);
+            this.Fractal.composer.addPass(this.Fractal.renderPass);
+            this.Fractal.composer.addPass(this.Fractal.effectFXAA);
+            this.Fractal.composer.addPass(this.Fractal.effectFXAA);
+            this.Fractal.composer.addPass(this.Fractal.effectFXAA);
+            this.Fractal.composer.addPass(this.Fractal.bloomPass);
+
+
+            /*
+            this.Fractal.renderPass = new THREE.RenderPass( this.el.sceneEl.object3D, this.el.sceneEl.camera );
+
+            //vvv Check if removable vvv
+            this.el.sceneEl.renderer.autoClear = false;
+            //end
+            this.el.sceneEl.renderer.gammaInput = true;
+  				  this.el.sceneEl.renderer.gammaOutput = true;
+
+            this.Fractal.bloomPass = new THREE.UnrealBloomPass(new THREE.Vector2(window.innerWidth, window.innerHeight), this.data.bloomStrength, this.data.bloomRadius, this.data.bloomThreshold);
+            this.Fractal.bloomPass.renderToScreen = true;
+
+            this.Fractal.composer = new THREE.EffectComposer( this.el.sceneEl.renderer );
+
+            this.Fractal.composer.setSize(window.innerWidth, window.innerHeight);
+            this.Fractal.composer.addPass( this.Fractal.renderPass );
+            this.Fractal.composer.addPass( this.Fractal.bloomPass );
+            */
+          })
+
+        }
+
       } else {
 
         this.Fractal.audioAnalysers = [];
@@ -145,8 +211,8 @@ AFRAME.registerComponent('fractal', {
         this.Fractal.clouds = [];
         this.Fractal.group = new THREE.Group();
 
-        var average = (this.data.points - (this.data.points % this.data.detail)) / this.data.detail;
-        average = average < 1 ? 1 : average;
+        var groupAverage = (this.data.points - (this.data.points % this.data.detail)) / this.data.detail;
+        groupAverage = groupAverage < 1 ? 1 : groupAverage;
         var meshes = this.data.detail > this.data.points ? this.data.points : this.data.detail;
 
         for ( var i = 0; i < meshes; i++ ) {
@@ -167,25 +233,27 @@ AFRAME.registerComponent('fractal', {
     			point.y = result.y * this.data.scale;
     			point.z = result.z * this.data.scale;
 
-          if ( Math.floor( i / average )  > ( meshes - 1 ) ) {
+          //Determine which group to add the vertex to.
+          if ( Math.floor( i / groupAverage ) > ( meshes - 1 ) ) {
     				group = ( meshes - 1 );
     			} else {
-    				group = Math.floor( i / average );
+    				group = Math.floor( i / groupAverage );
     			}
 
+          //Add vertex to specified group
           this.Fractal.clouds[ group ].vertices.push( point );
 
 
         }
 
         //Create meshes and add it to the group
-
         for(var i=0; i < this.Fractal.clouds.length; i++) {
           this.Fractal.group.add(new THREE.Points( this.Fractal.clouds[i], this.Fractal.materials[i] ));
         }
 
         this.el.setObject3D('group', this.Fractal.group);
 
+        //When an audio source is loaded, execute this function
         this.data.audioSource.addEventListener('sound-loaded', function ( e ) {
 
           this.Fractal.audioAnalysers = [];
@@ -244,9 +312,16 @@ AFRAME.registerComponent('fractal', {
   /**
    * Called on each scene tick.
    */
-  tick: function (t) {
+  tick: function (t, dt) {
+
     if ( this.data.audioSource && this.data.colors.length > 1 ) {
       this.Fractal.listen();
+    }
+
+    let self = this;
+
+    if ( this.Fractal.composer ) {
+      this.Fractal.composer.render( dt );
     }
   },
 

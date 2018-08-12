@@ -73,5 +73,10 @@
       "examples/build.js",
       "dist/**"
     ]
+  },
+  "dependencies": {
+    "postprocessing": "^4.9.0",
+    "three": "^0.95.0",
+    "three-effectcomposer": "0.0.1"
   }
 }
