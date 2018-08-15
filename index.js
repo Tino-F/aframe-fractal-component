@@ -30,7 +30,9 @@ AFRAME.registerComponent('fractal', {
    * Called once when component is attached. Generally for initial setup.
    */
   init: function () {
-    this.Fractal = {};
+    this.Fractal = {
+      pause: false
+    };
     var self = this;
 
     this.Fractal.componentToHex = function (c) {
@@ -245,7 +247,7 @@ AFRAME.registerComponent('fractal', {
    * Called on each scene tick.
    */
   tick: function (t) {
-    if ( this.data.audioSource && this.data.colors.length > 1 ) {
+    if ( this.data.audioSource && this.data.colors.length > 1 && !this.Fractal.pause ) {
       this.Fractal.listen();
     }
   },
@@ -254,11 +256,15 @@ AFRAME.registerComponent('fractal', {
    * Called when entity pauses.
    * Use to stop or remove any dynamic or background behavior such as events.
    */
-  pause: function () { },
+  pause: function () {
+    this.Fractal.pause = true;
+  },
 
   /**
    * Called when entity resumes.
    * Use to continue or add any dynamic or background behavior such as events.
    */
-  play: function () { }
+  play: function () {
+    this.Fractal.pause = false;
+  }
 });
