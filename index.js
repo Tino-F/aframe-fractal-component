@@ -12,11 +12,11 @@ AFRAME.registerComponent('fractal', {
     x: {type: 'string', default: 't' },
     y: {type: 'string', default: 't' },
     z: {type: 'string', default: 't' },
-    colors: {type: 'array', default: [ '#f4ee42', '#41f468', '#41dff4' ]},
-    points: {type: 'int', default: 100},
     audioSource: {type:'selector'},
-    fftSize: {type: 'int', default: 256},
+    colors: {type: 'array', default: [ '#f4ee42', '#41f468', '#41dff4' ]},
     detail: {type: 'int', default: 100},
+    fftSize: {type: 'int', default: 256},
+    points: {type: 'int', default: 100},
     pointSize: {type: 'int', default: 1},
     scale: {type: 'float', default: 1}
   },
@@ -233,8 +233,32 @@ AFRAME.registerComponent('fractal', {
    * Generally modifies the entity based on the data.
    */
   update: function (oldData) {
-    this.Fractal.updateColors();
-    this.Fractal.generate();
+
+    data = this.data;
+
+    //The if statement would have been far too long so I added this function to add a digit to the regenerate variable for each statement that is true.
+
+    function needsRegeneration () {
+      let regenerate = data.x != oldData.x ? 1 : 0;
+      regenerate += data.y != oldData.y ? 1 : 0;
+      regenerate += data.z != oldData.z ? 1 : 0;
+      regenerate += data.scale != oldData.scale ? 1 : 0;
+      regenerate += data.points != oldData.points ? 1 : 0;
+      regenerate += data.detail != oldData.detail ? 1 : 0;
+      regenerate += data.detail != oldData.detail ? 1 : 0;
+      regenerate += data.fftSize != oldData.fftSize ? 1 : 0;
+      regenerate += data.pointSize != oldData.pointSize ? 1 : 0;
+      return regenerate;
+    }
+
+    if ( needsRegeneration() > 0 ) {
+      this.Fractal.generate();
+    }
+
+    if ( data.colors != oldData.colors ) {
+      this.Fractal.updateColors();
+    }
+
   },
 
   /**
