@@ -53,6 +53,7 @@ require('aframe-fractal-component');
 | pointSize           | int               | 1                               | Size of individual points.                                                |
 | detail              | int               | 100                             | How many material objects to use.                                         |
 | scale               | int               | 1                               | The coordinates of each point will be multiplied by this number.          |
+| logValues           | boolean           | false                           | Set to true to log the x, y, and z values of the points to the console.   |
 | x                   | string/javascript | t                               | The function used to determine the x axis of each point based on t.       |
 | y                   | string/javascript | t                               | The function used to determine the y axis of each point based on t.       |
 | z                   | string/javascript | t                               | The function used to determine the z axis of each point based on t.       |

@@ -133,6 +133,10 @@ AFRAME.registerComponent('fractal', {
     			point.y = result.y * this.data.scale;
     			point.z = result.z * this.data.scale;
 
+          if ( this.data.logValues ) {
+            console.log( `x: ${point.x}, y: ${point.y}, z: ${point.z}` );
+          }
+
           this.Fractal.geometry.vertices.push( point );
 
         }
@@ -162,9 +166,7 @@ AFRAME.registerComponent('fractal', {
           //Plot points
 
           var result = this.Fractal.ft( i );
-          if ( this.data.logValues ) {
-            console.log( result );
-          }
+
           this.Fractal.PointArray.push( result );
           var group;
 
@@ -172,6 +174,10 @@ AFRAME.registerComponent('fractal', {
     			point.x = result.x * this.data.scale;
     			point.y = result.y * this.data.scale;
     			point.z = result.z * this.data.scale;
+
+          if ( this.data.logValues ) {
+            console.log( `x: ${point.x}, y: ${point.y}, z: ${point.z}` );
+          }
 
           if ( Math.floor( i / average )  > ( meshes - 1 ) ) {
     				group = ( meshes - 1 );
