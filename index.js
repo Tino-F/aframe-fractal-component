@@ -18,7 +18,8 @@ AFRAME.registerComponent('fractal', {
     fftSize: {type: 'int', default: 256},
     points: {type: 'int', default: 100},
     pointSize: {type: 'int', default: 1},
-    scale: {type: 'float', default: 1}
+    scale: {type: 'float', default: 1},
+    logValues: {type: 'boolean', default: false}
   },
 
   /**
@@ -161,6 +162,9 @@ AFRAME.registerComponent('fractal', {
           //Plot points
 
           var result = this.Fractal.ft( i );
+          if ( this.data.logValues ) {
+            console.log( result );
+          }
           this.Fractal.PointArray.push( result );
           var group;
 
