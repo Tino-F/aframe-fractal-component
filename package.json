@@ -1,6 +1,6 @@
 {
   "name": "aframe-fractal-component",
-  "version": "1.0.4",
+  "version": "1.0.5",
   "description": "An A-Frame component for graphing audio responsive points.",
   "main": "index.js",
   "unpkg": "dist/aframe-fractal-component.min.js",

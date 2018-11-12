@@ -108,6 +108,24 @@ AFRAME.registerComponent('fractal', {
     };
     var self = this;
 
+    if ( !this.data.audioSource ) {
+
+      let sourceSelector = this.el.getAttribute('audioSource');
+
+      if ( !sourceSelector ) {
+
+        this.data.audioSource = false;
+
+      } else {
+
+        this.data.audioSource = document.querySelector( sourceSelector );
+
+      }
+
+    }
+
+    this.data.audioSource = this.data.audioSource ? this.data.audioSource : this.el.getAttribute('audioSource');
+
     this.Fractal.componentToHex = function (c) {
       var hex = c.toString(16);
       return hex.length == 1 ? "0" + hex : hex;
