@@ -12,7 +12,11 @@
 
       <a-sound id='audio' position='0 0 -10' autoplay='true'></a-sound>
 
-        <a-entity position='0 -50 -400' rotation='0 90 0' fractal='audioSource: #audio; colors: #4286f4, #cbff00, #b800c9, #00c9a4, #ff002e; scale: 0.1; pointSize: 5; points: 3000 x: prev.x + ((512 * ( prev.y - prev.x )) * 0.0001); y: prev.y + ((prev.x * ( 3072 - prev.z ) - prev.y) * 0.0001); z: prev.z + ((prev.x * prev.y - 128 * prev.z) * 0.0001);'>
+        <a-entity
+          position='0 -50 -400'
+          rotation='0 90 0'
+          audioSource='#audio'
+          fractal='colors: #4286f4, #cbff00, #b800c9, #00c9a4, #ff002e; scale: 0.1; pointSize: 5; points: 3000 x: prev.x + ((512 * ( prev.y - prev.x )) * 0.0001); y: prev.y + ((prev.x * ( 3072 - prev.z ) - prev.y) * 0.0001); z: prev.z + ((prev.x * prev.y - 128 * prev.z) * 0.0001);'>
 
           <a-animation attribute="rotation"
              dur="100000"

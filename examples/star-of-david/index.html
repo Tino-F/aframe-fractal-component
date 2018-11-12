@@ -14,10 +14,17 @@
 
       <a-entity position='0 0 -250'>
 
-        <a-entity position='0 -100 0' fractal='audioSource: #audio; colors: #4286f4, #cbff00, #b800c9, #00c9a4, #ff002e; points: 200; x: Math.sin(t) * (t^2); z: Math.sin(t^2); scale:1;'>
+        <a-entity
+          position='0 -100 0'
+          audioSource='#audio'
+          fractal='colors: #4286f4, #cbff00, #b800c9, #00c9a4, #ff002e; points: 200; x: Math.sin(t) * (t^2); z: Math.sin(t^2); scale:1;'>
         </a-entity>
 
-        <a-entity position='0 140 0' rotation='0 0 180' fractal='audioSource: #audio; colors: #ff002e, #00c9a4, #b800c9, #cbff00, #4286f4; points: 200; x: Math.sin(t) * (t^2); z: Math.sin(t^2); scale:1;'>
+        <a-entity
+          position='0 140 0'
+          rotation='0 0 180'
+          audioSource='#audio'
+          fractal='colors: #ff002e, #00c9a4, #b800c9, #cbff00, #4286f4; points: 200; x: Math.sin(t) * (t^2); z: Math.sin(t^2); scale:1;'>
         </a-entity>
 
         <a-animation attribute="rotation"

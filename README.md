@@ -44,26 +44,26 @@ require('aframe-fractal-component');
 
 ### API
 
-| Property            | Type              | Default                         | Description                                                               |
-|---------------------|-------------------|---------------------------------|---------------------------------------------------------------------------|
-| audioSource         | selector          | *                               | A-Sound element.                                                          |
-| fftSize             | int               | 256                             | A non-zero power of two up to 2048, representing the size of the FFT.     |
-| colors              | array             | '#f4ee42', '#41f468', '#41dff4' | Array of colors used to describe the frequency.                           |
-| points              | int               | 100                             | Number of points to be plotted.                                           |
-| pointSize           | int               | 1                               | Size of individual points.                                                |
-| detail              | int               | 100                             | How many material objects to use.                                         |
-| scale               | int               | 1                               | The coordinates of each point will be multiplied by this number.          |
-| logValues           | boolean           | false                           | Set to true to log the x, y, and z values of the points to the console.   |
-| x                   | string/javascript | t                               | The function used to determine the x axis of each point based on t.       |
-| y                   | string/javascript | t                               | The function used to determine the y axis of each point based on t.       |
-| z                   | string/javascript | t                               | The function used to determine the z axis of each point based on t.       |
+| Property            | Type               | Default                         | Description                                                               |
+|---------------------|--------------------|---------------------------------|---------------------------------------------------------------------------|
+| audioSource         | selector/attribute | *                               | A-Sound element.                                                          |
+| fftSize             | int                | 256                             | A non-zero power of two up to 2048, representing the size of the FFT.     |
+| colors              | array              | '#f4ee42', '#41f468', '#41dff4' | Array of colors used to describe the frequency.                           |
+| points              | int                | 100                             | Number of points to be plotted.                                           |
+| pointSize           | int                | 1                               | Size of individual points.                                                |
+| detail              | int                | 100                             | How many material objects to use.                                         |
+| scale               | int                | 1                               | The coordinates of each point will be multiplied by this number.          |
+| logValues           | boolean            | false                           | Set to true to log the x, y, and z values of the points to the console.   |
+| x                   | string/javascript  | t                               | The function used to determine the x axis of each point based on t.       |
+| y                   | string/javascript  | t                               | The function used to determine the y axis of each point based on t.       |
+| z                   | string/javascript  | t                               | The function used to determine the z axis of each point based on t.       |
 
 ## Example
 
 ```html
 <a-sound src='src: url(../music/song.mp3)' position='0 0 -10' id='audio' autoplay='true'></a-sound>
 
-<a-entity fractal='audioSource: #audio; points: 200; x: Math.sin(t) * (t^2); z: Math.sin(t^2);' position='0 140 0' rotation='0 0 180'></a-entity>
+<a-entity audioSource='#audio' fractal='points: 200; x: Math.sin(t) * (t^2); z: Math.sin(t^2);' position='0 140 0' rotation='0 0 180'></a-entity>
 ```
 
 ### Instructions
